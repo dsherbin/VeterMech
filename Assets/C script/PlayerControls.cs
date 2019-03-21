@@ -18,8 +18,30 @@ public class PlayerControls : MonoBehaviour
     public float jumpHeight = 3f;
 
     private bool walking = false;
+    private bool fighter = false;
 
     private float yRot;
+
+    private float TF = 1;
+
+    //Particle assets
+    [SerializeField]
+    private ParticleSystem Lthruster;
+    [SerializeField]
+    private ParticleSystem Rthruster;
+    [SerializeField]
+    private ParticleSystem Lglow;
+    [SerializeField]
+    private ParticleSystem Rglow;
+    [SerializeField]
+    private GameObject trail1;
+    [SerializeField]
+    private GameObject trail2;
+    [SerializeField]
+    private GameObject trail3;
+    [SerializeField]
+    private GameObject trail4;
+
 
     [SerializeField]
     private Animator anim;
@@ -31,9 +53,18 @@ public class PlayerControls : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Lthruster.GetComponent<ParticleSystem>().enableEmission = false;
+        Rthruster.GetComponent<ParticleSystem>().enableEmission = false;
+        Lglow.GetComponent<ParticleSystem>().enableEmission = false;
+        Rglow.GetComponent<ParticleSystem>().enableEmission = false;
+
+
 
         playerSpeed = walkSpeed;
         rigidBody = GetComponent<Rigidbody>();
+
+        TF = 1;
+
 
 
     }
@@ -41,7 +72,43 @@ public class PlayerControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (TF == 1)
+            {
+                TF++;
+                fighter = true;
 
+                Lthruster.GetComponent<ParticleSystem>().enableEmission = true;
+                Rthruster.GetComponent<ParticleSystem>().enableEmission = true;
+                Lglow.GetComponent<ParticleSystem>().enableEmission = true;
+                Rglow.GetComponent<ParticleSystem>().enableEmission = true;
+
+
+                playerSpeed = walkSpeed * 3;
+
+
+            }
+            else if (TF == 2)
+            {
+                TF = 1;
+                fighter = false;
+
+                Lthruster.GetComponent<ParticleSystem>().enableEmission = false;
+                Rthruster.GetComponent<ParticleSystem>().enableEmission = false;
+                Lglow.GetComponent<ParticleSystem>().enableEmission = false;
+                Rglow.GetComponent<ParticleSystem>().enableEmission = false;
+
+                playerSpeed = walkSpeed;
+
+            }
+        }
+
+        Debug.Log(TF);
+
+        //if (TF == 1)
+
+        // {
         yRot += Input.GetAxis("Mouse X") * mouseSensitivity;
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, yRot, transform.localEulerAngles.z);
 
@@ -67,15 +134,29 @@ public class PlayerControls : MonoBehaviour
         }
 
         /*
-         
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             transform.Translate(Vector3.up * jumpHeight);
         }
 
-        */
+         */
 
         anim.SetBool("isWalking", walking);
-        Debug.Log(walking);
+        anim.SetBool("Fighter", fighter);
+
     }
 }
+
+
+     /*   else if (TF == 2)
+        {
+            //Second set of controls
+
+
+       }
+
+        anim.SetBool("Fighter", fighter);
+    }
+}
+*/
